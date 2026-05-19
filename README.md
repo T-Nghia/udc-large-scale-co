@@ -169,11 +169,11 @@ Problem generation and instance construction for CVRP datasets.
 Recommended environment:
 
 ```text
-Python = 3.9
-torch = 1.12.1
-torch-geometric = 2.4.0
-networkx = 2.6.3
-numpy = 1.22.4
+Python = 3.11
+torch = 2.7.1
+torch-geometric = 2.7.0
+networkx = 3.4
+numpy = 2.0+
 ```
 
 Install dependencies:
