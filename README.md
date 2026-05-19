@@ -12,16 +12,6 @@ This repository focuses on scalable neural combinatorial optimization methods co
 
 ---
 
-## Updates
-
-### 2024.11.25
-
-Fixed a bug in the CVRP implementation caused by an unnecessary legality check during decoding, which previously resulted in extremely low efficiency.
-
-Future updates will focus on cleaner implementations and better computational efficiency.
-
----
-
 ## Introduction
 
 Recent neural combinatorial optimization solvers achieve strong performance on small-scale routing problems but often suffer from severe performance degradation on large-scale instances.
