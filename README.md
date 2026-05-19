@@ -12,56 +12,54 @@ This repository focuses on scalable neural combinatorial optimization methods co
 
 ---
 
-# Introduction
+## Updates
 
-Neural combinatorial optimization solvers achieve strong performance on small-scale routing problems but often suffer from significant performance degradation on large-scale instances.
+### 2024.11.25
 
-This project explores a unified divide-and-conquer framework for large-scale CVRP. The framework combines:
+Fixed a bug in the CVRP implementation caused by an unnecessary legality check during decoding, which previously resulted in extremely low efficiency.
 
-1. A neural dividing policy for global route decomposition
-2. A constructive neural conquering policy for local sub-problem optimization
-3. A reunion mechanism for repairing sub-optimal decompositions
-
-The framework is inspired by recent advances in large-scale neural combinatorial optimization.
+Future updates will focus on cleaner implementations and better computational efficiency.
 
 ---
 
-# Problem Description
+## Introduction
 
-The Capacitated Vehicle Routing Problem (CVRP) is a classical NP-hard combinatorial optimization problem where:
+Recent neural combinatorial optimization solvers achieve strong performance on small-scale routing problems but often suffer from severe performance degradation on large-scale instances.
 
-* A fleet of vehicles starts from a depot
-* Each customer has a demand
-* Each vehicle has limited capacity
-* Every customer must be visited exactly once
-* The objective is to minimize total routing cost
+This project explores scalable routing optimization through a unified divide-and-conquer framework integrating:
 
-Large-scale CVRP instances are particularly challenging due to increasing computational complexity and memory consumption.
+1. Neural partitioning policies
+2. Constructive routing solvers
+3. Reinforcement learning
+4. Graph neural networks
+5. Heatmap-based optimization
+
+The framework is designed for large-scale CVRP optimization.
 
 ---
 
-# Framework Overview
+## Framework Overview
 
-The framework follows a Divide-Conquer-Reunion (DCR) optimization process.
+The optimization pipeline follows a Divide-Conquer-Reunion (DCR) process.
 
-## 1. Dividing Stage
+### Dividing Stage
 
-A lightweight Graph Neural Network (GNN) generates a heatmap representation of the routing instance and produces an initial global routing solution.
+A lightweight Graph Neural Network generates a heatmap representation of the routing instance and constructs an initial global routing solution.
 
-The large-scale instance is decomposed into multiple fixed-length sub-problems.
+The dividing policy decomposes large-scale CVRP instances into multiple fixed-length sub-problems.
 
 Main characteristics:
 
 * Sparse graph construction
-* Heatmap-based neural policy
+* Heatmap-based routing
 * Global route approximation
-* Large-scale instance partitioning
+* Neural partitioning
 
 ---
 
-## 2. Conquering Stage
+### Conquering Stage
 
-Each sub-problem is independently optimized using a constructive neural solver.
+Each sub-problem is independently optimized using a constructive neural routing solver.
 
 The conquering stage focuses on:
 
@@ -70,15 +68,13 @@ The conquering stage focuses on:
 * Sub-route optimization
 * Solution quality improvement
 
-Optimized sub-solutions are merged into a complete routing solution.
-
 ---
 
-## 3. Reunion Stage
+### Reunion Stage
 
 The reunion mechanism repairs poor boundary connections between adjacent sub-problems caused by sub-optimal decompositions.
 
-This additional optimization stage improves:
+This stage improves:
 
 * Route continuity
 * Boundary node connections
@@ -87,113 +83,154 @@ This additional optimization stage improves:
 
 ---
 
-# Repository Structure
+## Repository Structure
 
 ```text
-project/
+udc-large-scale-co/
 │
-├── data/                      # Benchmark datasets
-├── models/                    # Saved models
-├── results/                   # Experimental outputs
-├── utils/                     # Utility functions
+├── UDC/
+│   ├── CVRP-AGNN-ICAM/
+│   │   ├── CVRPEnv.py
+│   │   ├── CVRPModel.py
+│   │   ├── CVRPTester.py
+│   │   ├── CVRPTesterlib.py
+│   │   ├── CVRPTrainerPartition.py
+│   │   ├── PartitionModel.py
+│   │   ├── test_lib.py
+│   │   ├── test_rrc.py
+│   │   └── train_udc_n500_n1000.py
+│   │
+│   ├── utils/
+│   │   └── utils.py
+│   │
+│   └── CVRPProblemDef.py
 │
-├── train.py                   # Training pipeline
-├── test.py                    # Evaluation pipeline
-├── Tester.py                  # Testing framework
-├── Trainer.py                 # RL training framework
-│
-├── model.py                   # Neural architectures
-├── GNN.py                     # Graph neural network
-├── decoder.py                 # Constructive decoder
-│
-├── CVRPEnv.py                 # CVRP environment
-├── CVRPProblemDef.py          # Problem generation
-├── heatmap.py                 # Heatmap generation
-│
-└── README.md
+├── README.md
+└── .gitignore
 ```
 
 ---
 
-# Dependencies
+## Main Components
+
+### CVRPModel.py
+
+Implementation of the neural routing model for CVRP.
+
+Includes:
+
+* Encoder-decoder architecture
+* Heatmap generation
+* Neural routing policy
+* Route construction
+
+---
+
+### PartitionModel.py
+
+Implements the neural partitioning model used in the dividing stage.
+
+Responsible for:
+
+* Large-scale instance decomposition
+* Sub-problem generation
+* Route partitioning
+
+---
+
+### CVRPTrainerPartition.py
+
+Training framework for reinforcement learning optimization.
+
+Includes:
+
+* Policy training
+* Reward computation
+* Divide-Conquer-Reunion optimization
+
+---
+
+### CVRPTester.py
+
+Evaluation framework for trained models.
+
+Responsible for:
+
+* Benchmark testing
+* Route validation
+* Performance evaluation
+
+---
+
+### CVRPEnv.py
+
+Environment definition for CVRP reinforcement learning training and evaluation.
+
+---
+
+### CVRPProblemDef.py
+
+Problem generation and instance construction for CVRP datasets.
+
+---
+
+## Dependencies
 
 Recommended environment:
 
 ```text
-Python 3.9
-PyTorch >= 1.12
-torch-geometric >= 2.4
-NumPy
-NetworkX
-Matplotlib
+Python = 3.9
+torch = 1.12.1
+torch-geometric = 2.4.0
+networkx = 2.6.3
+numpy = 1.22.4
 ```
 
 Install dependencies:
 
 ```bash
-pip install torch numpy networkx matplotlib torch-geometric
+pip install torch numpy networkx torch-geometric
 ```
 
 ---
 
-# Training
+## Training
 
-Train the neural solver:
+Train the model:
 
 ```bash
-python train.py
+python UDC/CVRP-AGNN-ICAM/train_udc_n500_n1000.py
 ```
 
 ---
 
-# Evaluation
+## Evaluation
 
-Evaluate trained models:
+Run evaluation:
 
 ```bash
-python test.py
+python UDC/CVRP-AGNN-ICAM/CVRPTester.py
 ```
 
 ---
 
-# Benchmark Instances
+## Reproducibility
 
-The framework supports experiments on:
+The framework uses O(N²) memory complexity during parallel GNN computations.
 
-* Large-scale CVRP instances
-* Randomly generated routing datasets
-* Synthetic benchmark instances
+For extremely large routing instances, distance matrices and heatmaps may need to be stored on CPU memory.
 
----
+Experimental results may vary due to:
 
-# Reinforcement Learning Framework
+* Random initialization
+* Batch size differences
+* GPU memory limitations
 
-The framework adopts reinforcement learning for training both:
-
-* Dividing policy
-* Conquering policy
-
-Training is based on:
-
-* REINFORCE
-* Heatmap-based routing policies
-* Divide-Conquer-Reunion (DCR) optimization
+Reported large-scale experiments are conducted using NVIDIA RTX 3090 GPUs.
 
 ---
 
-# Features
-
-* Unified divide-and-conquer framework
-* RL-based routing optimization
-* GNN-based decomposition
-* Heatmap-based route generation
-* Large-scale CVRP support
-* Scalable neural optimization
-* End-to-end training pipeline
-
----
-
-# Research Topics
+## Research Topics
 
 This project involves:
 
@@ -206,19 +243,18 @@ This project involves:
 
 ---
 
-# Future Work
+## Acknowledgements
 
-Possible future improvements include:
+Some implementations are inspired by:
 
-* Better decomposition strategies
-* Memory-efficient GNN architectures
-* Hybrid neural-exact optimization
-* Multi-stage route refinement
-* Distributed training
-* Generalization to other routing problems
+* POMO
+* MatNet
+* GLOP
+
+We sincerely thank the original authors for their excellent work.
 
 ---
 
-# License
+## License
 
 This project is intended for research and educational purposes.
